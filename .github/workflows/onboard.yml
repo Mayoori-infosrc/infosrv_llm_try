@@ -1,0 +1,52 @@
+# .github/workflows/onboard.yml
+name: LLM-Ops Workspace Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_name:
+        description: "Name of the LLM project (used for repo + observability)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout workspace
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run generator pipeline
+        env:
+          LLMOPS_PROJECT_NAME: ${{ github.event.inputs.project_name }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          LLMOPS_STATE_BUCKET: ${{ secrets.LLMOPS_STATE_BUCKET }}
+          LLMOPS_LOCK_TABLE: ${{ secrets.LLMOPS_LOCK_TABLE }}
+        run: |
+          python - << 'PY'
+          from core.engine import run_pipeline
+          run_pipeline(mode="generator", workspace_path="workspace.yaml")
+          PY
+
+      - name: Upload pipeline output
+        uses: actions/upload-artifact@v4
+        with:
+          name: generator-output
+          path: pipeline_output.json

@@ -1,0 +1,25 @@
+version: 1
+
+project_name: Test Project - Payroll LLM
+description: "Payroll LLM project (demo)"
+
+observability:
+  enabled: true
+  tool: phoenix
+
+mcp:
+  enabled: false
+
+knowledge:
+  enabled: true
+  source: null
+
+memory:
+  enabled: true
+  store: in-memory
+
+# Your template folder containing starter LLM code
+templates_folder: templates
+
+# Folder containing prompts to sync to Phoenix (if/when you wire that in)
+prompts_folder: templates/src/llm/prompts
