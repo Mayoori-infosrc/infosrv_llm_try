@@ -1,0 +1,9 @@
+requests
+PyYAML
+-e src
+
+boto3
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp
+arize-phoenix
