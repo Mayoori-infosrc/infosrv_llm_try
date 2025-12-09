@@ -15,6 +15,9 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
     steps:
       - name: Checkout workspace
@@ -30,13 +33,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Run generator pipeline
         env:
           LLMOPS_PROJECT_NAME: ${{ github.event.inputs.project_name }}
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
           LLMOPS_STATE_BUCKET: ${{ secrets.LLMOPS_STATE_BUCKET }}
           LLMOPS_LOCK_TABLE: ${{ secrets.LLMOPS_LOCK_TABLE }}
         run: |

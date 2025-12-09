@@ -1,5 +1,0 @@
-# templates/src/llm/prompts/system_prompt.yaml
-id: system-payroll
-description: "System prompt for payroll agent"
-prompt: |
-  You are a payroll assistant. Answer only payroll related questions.

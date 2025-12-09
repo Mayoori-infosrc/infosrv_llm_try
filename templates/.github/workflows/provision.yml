@@ -22,9 +22,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run provision
-        env:
-          PHOENIX_BASE_URL: ${{ secrets.PHOENIX_BASE_URL }}
-          LLM_OBSERVE_TOOL: "phoenix"
-          LLM_OBSERVE_PROJECT_NAME: ${{ secrets.LLM_OBSERVE_PROJECT_NAME || github.event.repository.name }}
+        # env:
+        #   PHOENIX_BASE_URL: ${{ secrets.PHOENIX_BASE_URL }}
+        #   LLM_OBSERVE_TOOL: "phoenix"
+        #   LLM_OBSERVE_PROJECT_NAME: ${{ secrets.LLM_OBSERVE_PROJECT_NAME || github.event.repository.name }}
         run: |
-          PYTHONPATH=src python -m llm.provision
+          python main.py
